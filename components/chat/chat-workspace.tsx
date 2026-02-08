@@ -66,7 +66,7 @@ export function ChatWorkspace({ chatId }: ChatWorkspaceProps) {
       <div className="hidden min-h-0 flex-1 md:block">
         <ResizablePanelGroup
           orientation="horizontal"
-          className="h-full rounded-2xl border shadow-xs"
+          className="h-full rounded-2xl shadow-xs"
         >
           <ResizablePanel defaultSize={40} minSize={450} maxSize={600}>
             <ChatPane
@@ -80,9 +80,9 @@ export function ChatWorkspace({ chatId }: ChatWorkspaceProps) {
               messages={messages}
             />
           </ResizablePanel>
-          <ResizableHandle />
+          <ResizableHandle className="w-0 bg-transparent after:w-3" />
           <ResizablePanel defaultSize={60} minSize={30}>
-            <ChatPreviewPanel />
+            <ChatPreviewPanel frame="split" />
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
@@ -100,8 +100,8 @@ export function ChatWorkspace({ chatId }: ChatWorkspaceProps) {
             messages={messages}
           />
         </div>
-        <div className="h-52 rounded-2xl border bg-card shadow-xs">
-          <ChatPreviewPanel />
+        <div className="h-52 shadow-xs">
+          <ChatPreviewPanel frame="standalone" />
         </div>
       </div>
     </main>

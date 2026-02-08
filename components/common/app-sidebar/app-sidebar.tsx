@@ -38,7 +38,7 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar variant="floating" collapsible="icon">
+    <Sidebar collapsible="icon">
       <SidebarHeader>
         <div className="flex items-center gap-1 px-2 py-1.5">
           <Link
