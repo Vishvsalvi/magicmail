@@ -1,13 +1,16 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { ChatPreviewPanel } from "@/components/chat/chat-preview-panel";
 import { ChatThread } from "@/components/chat/chat-thread";
 import { PromptInput } from "@/components/common/prompt-input/prompt-input";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { consumePendingInitialPrompt } from "@/lib/chat-launch";
+import { DEFAULT_EDITOR_CODE } from "@/lib/output-filters/default-editor-code";
+import { deriveChatState } from "@/lib/output-filters/derive-chat-state";
+import type { DisplayChatMessage } from "@/lib/output-filters/types";
 
 type ChatWorkspaceProps = {
   chatId: string;
@@ -24,14 +27,14 @@ function ChatPane({
   onInputChange: (value: string) => void;
   onSubmit: (value: string) => void;
   disabled: boolean;
-  messages: ReturnType<typeof useChat>["messages"];
+  messages: DisplayChatMessage[];
 }) {
   return (
-    <section className="flex h-full min-h-0 flex-col">
-      <div className="min-h-0 flex-1">
+    <section className="flex h-full min-h-0 flex-col overflow-hidden">
+      <div className="min-h-0 flex-1 overflow-hidden">
         <ChatThread messages={messages} />
       </div>
-      <div className="p-3">
+      <div className="shrink-0 p-3">
         <PromptInput
           value={input}
           onValueChange={onInputChange}
@@ -48,6 +51,10 @@ export function ChatWorkspace({ chatId }: ChatWorkspaceProps) {
   const [input, setInput] = useState("");
   const initializedChatIdRef = useRef<string | null>(null);
   const { messages, sendMessage, status } = useChat({ id: chatId });
+  const { displayMessages, editorCode } = useMemo(
+    () => deriveChatState(messages, DEFAULT_EDITOR_CODE),
+    [messages]
+  );
 
   useEffect(() => {
     if (initializedChatIdRef.current === chatId) return;
@@ -62,8 +69,8 @@ export function ChatWorkspace({ chatId }: ChatWorkspaceProps) {
   const isSubmitting = status === "streaming" || status === "submitted";
 
   return (
-    <main className="flex flex-1 flex-col pt-2">
-      <div className="hidden min-h-0 flex-1 md:block">
+    <main className="flex min-h-0 flex-1 flex-col overflow-hidden pt-2">
+      <div className="hidden min-h-0 flex-1 overflow-hidden md:block">
         <ResizablePanelGroup
           orientation="horizontal"
           className="h-full rounded-2xl shadow-xs"
@@ -77,18 +84,18 @@ export function ChatWorkspace({ chatId }: ChatWorkspaceProps) {
                 setInput("");
               }}
               disabled={isSubmitting}
-              messages={messages}
+              messages={displayMessages}
             />
           </ResizablePanel>
           <ResizableHandle className="w-0 bg-transparent after:w-3" />
           <ResizablePanel defaultSize={60} minSize={30}>
-            <ChatPreviewPanel frame="split" />
+            <ChatPreviewPanel frame="split" code={editorCode} />
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col gap-4 md:hidden">
-        <div className="min-h-0 flex-1 rounded-2xl bg-card shadow-xs">
+      <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden md:hidden">
+        <div className="min-h-0 flex-1 overflow-hidden rounded-2xl bg-card shadow-xs">
           <ChatPane
             input={input}
             onInputChange={setInput}
@@ -97,11 +104,11 @@ export function ChatWorkspace({ chatId }: ChatWorkspaceProps) {
               setInput("");
             }}
             disabled={isSubmitting}
-            messages={messages}
+            messages={displayMessages}
           />
         </div>
-        <div className="h-52 shadow-xs">
-          <ChatPreviewPanel frame="standalone" />
+        <div className="h-52 shrink-0 shadow-xs">
+          <ChatPreviewPanel frame="standalone" code={editorCode} />
         </div>
       </div>
     </main>
