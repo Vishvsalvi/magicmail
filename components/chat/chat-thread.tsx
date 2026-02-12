@@ -1,12 +1,12 @@
 "use client";
 
-import type { UIMessage } from "ai";
 import { useEffect, useRef } from "react";
 
+import type { DisplayChatMessage } from "@/lib/output-filters/types";
 import { cn } from "@/lib/utils";
 
 type ChatThreadProps = {
-  messages: UIMessage[];
+  messages: DisplayChatMessage[];
 };
 
 export function ChatThread({ messages }: ChatThreadProps) {
@@ -25,12 +25,9 @@ export function ChatThread({ messages }: ChatThreadProps) {
   }
 
   return (
-    <div className="h-full overflow-y-auto px-4 py-4">
+    <div className="themed-scrollbar h-full min-h-0 overflow-y-auto overscroll-contain px-4 py-4">
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
         {messages.map((message) => {
-          const textParts = message.parts.filter((part) => part.type === "text");
-          if (textParts.length === 0) return null;
-
           const isUserMessage = message.role === "user";
 
           return (
@@ -53,9 +50,7 @@ export function ChatThread({ messages }: ChatThreadProps) {
                   {isUserMessage ? "You" : "Assistant"}
                 </p>
                 <div className="space-y-2 text-sm leading-6 whitespace-pre-wrap">
-                  {textParts.map((part, index) => (
-                    <p key={`${message.id}-${index}`}>{part.text}</p>
-                  ))}
+                  <p>{message.text}</p>
                 </div>
               </div>
             </article>

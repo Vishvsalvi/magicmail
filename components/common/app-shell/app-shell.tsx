@@ -15,13 +15,13 @@ export function AppShell({ children, defaultSidebarOpen = true }: AppShellProps)
   return (
     <SidebarProvider defaultOpen={defaultSidebarOpen}>
       <AppSidebar />
-      <SidebarInset>
-        <header className="flex h-8 items-center gap-2 px-3">
+      <SidebarInset className="h-svh overflow-hidden">
+        <header className="flex h-8 shrink-0 items-center gap-2 px-3">
           <div className="ml-auto mt-2">
             <ThemeToggle />
           </div>
         </header>
-        <div className="flex min-h-[calc(100svh-3rem)] flex-1 flex-col">{children}</div>
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );
