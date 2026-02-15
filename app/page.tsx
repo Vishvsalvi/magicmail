@@ -34,7 +34,7 @@ export default function Home() {
               setInput("");
               router.push(`/chat/${chatId}`);
             }}
-            className="max-w-3xl h-[120px]"
+            className="max-w-3xl min-h-[120px]"
           />
         </section>
       </main>
