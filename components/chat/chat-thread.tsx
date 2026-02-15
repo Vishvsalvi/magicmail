@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
+import { Message, MessageContent } from "@/components/common/message";
 import type { DisplayChatMessage } from "@/lib/output-filters/types";
 import { cn } from "@/lib/utils";
 
@@ -31,29 +32,28 @@ export function ChatThread({ messages }: ChatThreadProps) {
           const isUserMessage = message.role === "user";
 
           return (
-            <article
+            <Message
               key={message.id}
               className={cn("flex w-full", isUserMessage ? "justify-end" : "justify-start")}
             >
-              <div
-                className={cn(
-                  "max-w-[90%] rounded-2xl border px-4 py-3",
-                  isUserMessage ? "bg-primary text-primary-foreground" : "bg-card"
-                )}
-              >
+              <div className="max-w-[90%]">
                 <p
                   className={cn(
                     "mb-1 text-xs font-medium",
                     isUserMessage ? "text-primary-foreground/80" : "text-muted-foreground"
                   )}
                 >
-                  {isUserMessage ? "You" : "Assistant"}
                 </p>
-                <div className="space-y-2 text-sm leading-6 whitespace-pre-wrap">
+                <MessageContent
+                  className={cn(
+                    "rounded-xl text-sm px-2 leading-6 whitespace-pre-wrap",
+                    isUserMessage ? "bg-secondary text-primary" : "bg-transparent"
+                  )}
+                >
                   <p>{message.text}</p>
-                </div>
+                </MessageContent>
               </div>
-            </article>
+            </Message>
           );
         })}
         <div ref={bottomAnchorRef} />

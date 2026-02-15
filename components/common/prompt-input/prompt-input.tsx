@@ -57,11 +57,11 @@ export function PromptInput({
   return (
     <div
       className={cn(
-        "flex min-h-[12px] w-[690px] max-w-full flex-col rounded-lg border border-border bg-card px-2 pb-2 shadow-xs shadow-black/10 focus-within:ring focus-within:ring-border/50",
+        "flex min-h-[120px] w-[690px] max-w-full flex-col rounded-lg border border-border bg-card px-2 pb-2 pt-2 shadow-xs shadow-black/10 focus-within:ring focus-within:ring-border/50",
         className
       )}
     >
-      <div className="flex min-h-[55px] flex-1 items-center">
+      <div className="flex min-h-[55px] flex-1 items-start">
         <Textarea
           ref={textareaRef}
           value={text}

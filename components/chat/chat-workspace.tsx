@@ -40,7 +40,7 @@ function ChatPane({
           onValueChange={onInputChange}
           onSubmit={onSubmit}
           disabled={disabled}
-          className="h-[120px] w-full max-w-none"
+          className="min-h-[120px] w-full max-w-none"
         />
       </div>
     </section>
@@ -67,6 +67,7 @@ export function ChatWorkspace({ chatId }: ChatWorkspaceProps) {
   }, [chatId, sendMessage]);
 
   const isSubmitting = status === "streaming" || status === "submitted";
+  const canCompilePreview = status === "ready";
 
   return (
     <main className="flex min-h-0 flex-1 flex-col overflow-hidden pt-2">
@@ -89,7 +90,7 @@ export function ChatWorkspace({ chatId }: ChatWorkspaceProps) {
           </ResizablePanel>
           <ResizableHandle className="w-0 bg-transparent after:w-3" />
           <ResizablePanel defaultSize={60} minSize={30}>
-            <ChatPreviewPanel frame="split" code={editorCode} />
+            <ChatPreviewPanel frame="split" code={editorCode} canCompile={canCompilePreview} />
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
@@ -108,7 +109,11 @@ export function ChatWorkspace({ chatId }: ChatWorkspaceProps) {
           />
         </div>
         <div className="h-52 shrink-0 shadow-xs">
-          <ChatPreviewPanel frame="standalone" code={editorCode} />
+          <ChatPreviewPanel
+            frame="standalone"
+            code={editorCode}
+            canCompile={canCompilePreview}
+          />
         </div>
       </div>
     </main>
