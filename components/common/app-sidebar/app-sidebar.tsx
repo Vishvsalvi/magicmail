@@ -28,6 +28,9 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
+const brandKitGroupLabelClasses =
+  "mb-1 px-2 text-xs font-medium uppercase tracking-wider text-muted-foreground/70";
+
 export function AppSidebar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -38,18 +41,21 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar collapsible="icon">
-      <SidebarHeader>
-        <div className="flex items-center gap-1 px-2 py-1.5">
+    <Sidebar
+      collapsible="icon"
+      className="border-border/50 [&>[data-sidebar=sidebar]]:bg-card/80"
+    >
+      <SidebarHeader className="px-3 pt-4 pb-3 group-data-[collapsible=icon]:px-2">
+        <div className="flex items-center gap-1 px-2 py-1.5 group-data-[collapsible=icon]:px-0">
           <Link
             href="/"
             onClick={handleNavClick}
-            className="flex min-w-0 flex-1 items-center gap-2 rounded-md"
+            className="flex min-w-0 flex-1 items-center gap-2 rounded-md group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0"
           >
             <div className="flex size-6 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
               <Sparkles className="size-4" />
             </div>
-            <span className="truncate font-semibold group-data-[collapsible=icon]:hidden">
+            <span className="truncate text-sm font-semibold tracking-wide group-data-[collapsible=icon]:hidden">
               MagicMail
             </span>
           </Link>
@@ -58,10 +64,11 @@ export function AppSidebar() {
         <div className="hidden px-2 pb-1 group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
           <SidebarTrigger />
         </div>
-        <SidebarMenu>
+        <SidebarMenu className="gap-0.5">
           <SidebarMenuItem>
             <SidebarMenuButton
               tooltip="New Chat"
+              variant="brandKit"
               onClick={() => {
                 requestNewChatReset();
                 setOpenMobile(false);
@@ -75,17 +82,20 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarHeader>
 
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+      <SidebarContent className="gap-5 px-3 pb-6 group-data-[collapsible=icon]:px-2">
+        <SidebarGroup className="p-0">
+          <SidebarGroupLabel className={brandKitGroupLabelClasses}>
+            Navigation
+          </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="gap-0.5">
               {appNavItems.map((item) => (
                 <SidebarMenuItem key={item.href}>
                   <SidebarMenuButton
                     asChild
                     isActive={pathname === item.href}
                     tooltip={item.title}
+                    variant="brandKit"
                   >
                     <Link href={item.href} onClick={handleNavClick}>
                       <item.icon />
@@ -98,13 +108,18 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup>
-          <SidebarGroupLabel>Chats</SidebarGroupLabel>
+        <SidebarGroup className="p-0">
+          <SidebarGroupLabel className={brandKitGroupLabelClasses}>
+            Chats
+          </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="gap-0.5">
               {sidebarChats.map((chat) => (
                 <SidebarMenuItem key={chat.id}>
-                  <SidebarMenuButton tooltip={chat.title}>
+                  <SidebarMenuButton
+                    tooltip={chat.title}
+                    variant="brandKit"
+                  >
                     <MessageSquare />
                     <span>{chat.title}</span>
                   </SidebarMenuButton>
@@ -115,10 +130,13 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter>
+      <SidebarFooter className="px-3 pb-3 group-data-[collapsible=icon]:px-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Profile">
+            <SidebarMenuButton
+              tooltip="Profile"
+              variant="brandKit"
+            >
               <div className="flex size-6 items-center justify-center rounded-full bg-sidebar-accent text-xs font-semibold">
                 VS
               </div>
