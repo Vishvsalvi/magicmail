@@ -29,10 +29,7 @@ import {
 } from "@/components/ui/sidebar";
 
 const brandKitGroupLabelClasses =
-  "mb-1 block h-auto px-2 text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70";
-
-const brandKitMenuButtonClasses =
-  "h-auto gap-2.5 rounded-lg px-2.5 py-2 text-[13px] font-medium text-muted-foreground transition-all duration-150 hover:bg-accent/50 hover:text-foreground data-[active=true]:bg-accent data-[active=true]:text-accent-foreground data-[active=true]:shadow-sm group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:[&>span]:hidden [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:opacity-60 data-[active=true]:[&>svg]:opacity-80";
+  "mb-1 block h-auto px-2 text-xs font-medium uppercase tracking-wider text-muted-foreground/70";
 
 export function AppSidebar() {
   const pathname = usePathname();
@@ -71,7 +68,7 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton
               tooltip="New Chat"
-              className={brandKitMenuButtonClasses}
+              variant="brandKit"
               onClick={() => {
                 requestNewChatReset();
                 setOpenMobile(false);
@@ -98,7 +95,7 @@ export function AppSidebar() {
                     asChild
                     isActive={pathname === item.href}
                     tooltip={item.title}
-                    className={brandKitMenuButtonClasses}
+                    variant="brandKit"
                   >
                     <Link href={item.href} onClick={handleNavClick}>
                       <item.icon />
@@ -121,7 +118,7 @@ export function AppSidebar() {
                 <SidebarMenuItem key={chat.id}>
                   <SidebarMenuButton
                     tooltip={chat.title}
-                    className={brandKitMenuButtonClasses}
+                    variant="brandKit"
                   >
                     <MessageSquare />
                     <span>{chat.title}</span>
@@ -138,7 +135,7 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton
               tooltip="Profile"
-              className={brandKitMenuButtonClasses}
+              variant="brandKit"
             >
               <div className="flex size-6 items-center justify-center rounded-full bg-sidebar-accent text-xs font-semibold">
                 VS

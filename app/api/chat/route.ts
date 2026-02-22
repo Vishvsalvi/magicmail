@@ -1,15 +1,42 @@
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
-import { openai } from "@ai-sdk/openai";
+
+import {
+  createLanguageModel,
+  getProviderAvailabilityError,
+  resolveRequestedModel,
+} from "@/lib/ai/models.server";
 import { SYSTEM_PROMPT } from "@/lib/constants/prompts/system";
 
-const model = process.env.OPENAI_MODEL ?? "gpt-5-mini";
+type ChatRequestBody = {
+  messages?: unknown;
+  providerId?: unknown;
+  modelId?: unknown;
+};
 
 export async function POST(req: Request) {
-  const { messages }: { messages: UIMessage[] } = await req.json();
+  let body: ChatRequestBody;
+
+  try {
+    body = (await req.json()) as ChatRequestBody;
+  } catch {
+    return new Response("Invalid JSON body.", { status: 400 });
+  }
+
+  if (!Array.isArray(body.messages)) {
+    return new Response("Request body must include a `messages` array.", {
+      status: 400,
+    });
+  }
+
+  const selection = resolveRequestedModel(body.providerId, body.modelId);
+  const availabilityError = getProviderAvailabilityError(selection.providerId);
+  if (availabilityError) {
+    return new Response(availabilityError, { status: 400 });
+  }
 
   const result = streamText({
-    model: openai(model),
-    messages: await convertToModelMessages(messages),
+    model: createLanguageModel(selection.providerId, selection.modelId),
+    messages: await convertToModelMessages(body.messages as UIMessage[]),
     system: SYSTEM_PROMPT,
   });
 

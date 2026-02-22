@@ -25,17 +25,19 @@ type MonacoTheme = "light" | "vs-dark";
 
 const PREVIEW_CENTERING_STYLE = `
 html, body {
-  height: 100% !important;
+  min-height: 100% !important;
   margin: 0 !important;
 }
 
 body {
   display: flex !important;
+  flex-direction: column !important;
   align-items: center !important;
-  justify-content: center !important;
+  justify-content: flex-start !important;
   padding: 24px 16px !important;
   box-sizing: border-box !important;
-  overflow: auto !important;
+  overflow-y: auto !important;
+  overflow-x: auto !important;
 }
 `;
 
@@ -146,16 +148,18 @@ export function ChatPreviewPanel({
     const { documentElement, body } = frameDocument;
     if (!documentElement || !body) return;
 
-    // Keep preview content centered while preserving scroll when the email is tall.
-    documentElement.style.height = "100%";
-    body.style.height = "100%";
+    // Keep horizontal centering, but top-align content so scroll always starts at the top.
+    documentElement.style.minHeight = "100%";
+    body.style.minHeight = "100%";
     body.style.margin = "0";
     body.style.display = "flex";
+    body.style.flexDirection = "column";
     body.style.alignItems = "center";
-    body.style.justifyContent = "center";
+    body.style.justifyContent = "flex-start";
     body.style.padding = "24px 16px";
     body.style.boxSizing = "border-box";
-    body.style.overflow = "auto";
+    body.style.overflowY = "auto";
+    body.style.overflowX = "auto";
     // body.style.backgroundColor = "#e5e7eb";
   }, []);
 

@@ -1,4 +1,9 @@
-type PendingInitialPrompt = {
+import {
+  resolveModelSelection,
+  type ModelSelection,
+} from "@/lib/constants/models";
+
+type PendingInitialPrompt = ModelSelection & {
   chatId: string;
   prompt: string;
 };
@@ -31,9 +36,23 @@ export function consumePendingInitialPrompt(chatId: string) {
   window.sessionStorage.removeItem(PENDING_INITIAL_PROMPT_KEY);
 
   try {
-    const payload = JSON.parse(rawPayload) as PendingInitialPrompt;
-    if (payload.chatId !== chatId) return null;
-    return payload.prompt;
+    const payload = JSON.parse(rawPayload) as {
+      chatId?: unknown;
+      prompt?: unknown;
+      providerId?: unknown;
+      modelId?: unknown;
+    };
+
+    if (payload.chatId !== chatId || typeof payload.prompt !== "string") return null;
+
+    const selection = resolveModelSelection(payload.providerId, payload.modelId);
+    const normalizedPayload: PendingInitialPrompt = {
+      chatId,
+      prompt: payload.prompt,
+      ...selection,
+    };
+
+    return normalizedPayload;
   } catch {
     return null;
   }
