@@ -22,14 +22,21 @@ import {
   type ProviderAvailability,
   type ProviderId,
 } from "@/lib/constants/models";
+import {
+  TONE_OF_VOICE_OPTIONS,
+  resolveToneOfVoice,
+  type ToneOfVoice,
+} from "@/lib/constants/tone-of-voice";
 import { cn } from "@/lib/utils";
 
 type PromptInputProps = {
   onSubmit: (value: string) => void;
   onModelChange: (selection: ModelSelection) => void;
+  onToneOfVoiceChange: (toneOfVoice: ToneOfVoice) => void;
   value?: string;
   selectedProviderId: ProviderId;
   selectedModelId: string;
+  selectedToneOfVoice: ToneOfVoice;
   modelOptions: FlattenedModelOption[];
   providerAvailability: ProviderAvailability;
   onValueChange?: (value: string) => void;
@@ -41,9 +48,11 @@ type PromptInputProps = {
 export function PromptInput({
   onSubmit,
   onModelChange,
+  onToneOfVoiceChange,
   value,
   selectedProviderId,
   selectedModelId,
+  selectedToneOfVoice,
   modelOptions,
   providerAvailability,
   onValueChange,
@@ -63,6 +72,13 @@ export function PromptInput({
           option.providerId === selectedProviderId && option.modelId === selectedModelId
       ),
     [modelOptions, selectedProviderId, selectedModelId]
+  );
+  const selectedToneOption = useMemo(
+    () =>
+      TONE_OF_VOICE_OPTIONS.find(
+        (option) => option.value === selectedToneOfVoice
+      ),
+    [selectedToneOfVoice]
   );
 
   const groupedModelOptions = useMemo(() => {
@@ -142,7 +158,7 @@ export function PromptInput({
       </div>
 
       <div className="mt-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Button
             type="button"
             variant="ghost"
@@ -152,6 +168,26 @@ export function PromptInput({
           >
             <Paperclip className="size-4" />
           </Button>
+          <Select
+            value={selectedToneOfVoice}
+            onValueChange={(nextValue) => {
+              onToneOfVoiceChange(resolveToneOfVoice(nextValue));
+            }}
+            disabled={disabled}
+          >
+            <SelectTrigger className="h-8 w-[160px] gap-1 border border-border/60 bg-background/50 px-2 text-xs focus-visible:ring-1">
+              <SelectValue placeholder="Select tone">
+                {selectedToneOption ? selectedToneOption.label : "Select tone"}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent className="w-[180px]" align="start">
+              {TONE_OF_VOICE_OPTIONS.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <Select
             value={selectionToValue({
               providerId: selectedProviderId,

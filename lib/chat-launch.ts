@@ -2,10 +2,15 @@ import {
   resolveModelSelection,
   type ModelSelection,
 } from "@/lib/constants/models";
+import {
+  resolveToneOfVoice,
+  type ToneOfVoice,
+} from "@/lib/constants/tone-of-voice";
 
 type PendingInitialPrompt = ModelSelection & {
   chatId: string;
   prompt: string;
+  toneOfVoice: ToneOfVoice;
 };
 
 const PENDING_INITIAL_PROMPT_KEY = "chat:pending-initial-prompt";
@@ -41,15 +46,18 @@ export function consumePendingInitialPrompt(chatId: string) {
       prompt?: unknown;
       providerId?: unknown;
       modelId?: unknown;
+      toneOfVoice?: unknown;
     };
 
     if (payload.chatId !== chatId || typeof payload.prompt !== "string") return null;
 
     const selection = resolveModelSelection(payload.providerId, payload.modelId);
+    const toneOfVoice = resolveToneOfVoice(payload.toneOfVoice);
     const normalizedPayload: PendingInitialPrompt = {
       chatId,
       prompt: payload.prompt,
       ...selection,
+      toneOfVoice,
     };
 
     return normalizedPayload;

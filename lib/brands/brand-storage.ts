@@ -1,4 +1,4 @@
-import type { BrandKit } from "./brand-types"
+import { DEFAULT_BRAND_KIT, type BrandKit } from "./brand-types"
 
 const STORAGE_KEY = "magicmail-brand-kit"
 
@@ -14,7 +14,19 @@ export function loadBrandKit(): BrandKit | null {
   try {
     const data = localStorage.getItem(STORAGE_KEY)
     if (!data) return null
-    return JSON.parse(data) as BrandKit
+    const parsed = JSON.parse(data) as Partial<BrandKit>
+
+    return {
+      ...DEFAULT_BRAND_KIT,
+      ...parsed,
+      socials: Array.isArray(parsed.socials)
+        ? parsed.socials
+        : DEFAULT_BRAND_KIT.socials,
+      colors: {
+        ...DEFAULT_BRAND_KIT.colors,
+        ...(parsed.colors ?? {}),
+      },
+    }
   } catch (error) {
     console.error("Failed to load brand kit:", error)
     return null

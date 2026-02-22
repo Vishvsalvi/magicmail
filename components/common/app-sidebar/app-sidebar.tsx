@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/sidebar";
 
 const brandKitGroupLabelClasses =
-  "mb-1 block h-auto px-2 text-xs font-medium uppercase tracking-wider text-muted-foreground/70";
+  "mb-1 px-2 text-xs font-medium uppercase tracking-wider text-muted-foreground/70";
 
 export function AppSidebar() {
   const pathname = usePathname();

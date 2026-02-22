@@ -8,6 +8,7 @@ import { ChatPreviewPanel } from "@/components/chat/chat-preview-panel";
 import { ChatThread } from "@/components/chat/chat-thread";
 import { PromptInput } from "@/components/common/prompt-input/prompt-input";
 import { useSelectedModel } from "@/hooks/use-selected-model";
+import { useSelectedTone } from "@/hooks/use-selected-tone";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { consumePendingInitialPrompt } from "@/lib/chat-launch";
 import {
@@ -16,6 +17,7 @@ import {
   type ModelSelection,
   type ProviderAvailability,
 } from "@/lib/constants/models";
+import type { ToneOfVoice } from "@/lib/constants/tone-of-voice";
 import { DEFAULT_EDITOR_CODE } from "@/lib/output-filters/default-editor-code";
 import { deriveChatState } from "@/lib/output-filters/derive-chat-state";
 import type { DisplayChatMessage } from "@/lib/output-filters/types";
@@ -31,6 +33,8 @@ function ChatPane({
   onSubmit,
   modelSelection,
   onModelChange,
+  toneOfVoice,
+  onToneOfVoiceChange,
   modelOptions,
   providerAvailability,
   disabled,
@@ -41,6 +45,8 @@ function ChatPane({
   onSubmit: (value: string) => void;
   modelSelection: ModelSelection;
   onModelChange: (selection: ModelSelection) => void;
+  toneOfVoice: ToneOfVoice;
+  onToneOfVoiceChange: (toneOfVoice: ToneOfVoice) => void;
   modelOptions: ReturnType<typeof flattenModelOptions>;
   providerAvailability: ProviderAvailability;
   disabled: boolean;
@@ -58,7 +64,9 @@ function ChatPane({
           onSubmit={onSubmit}
           selectedProviderId={modelSelection.providerId}
           selectedModelId={modelSelection.modelId}
+          selectedToneOfVoice={toneOfVoice}
           onModelChange={onModelChange}
+          onToneOfVoiceChange={onToneOfVoiceChange}
           modelOptions={modelOptions}
           providerAvailability={providerAvailability}
           disabled={disabled}
@@ -74,6 +82,7 @@ export function ChatWorkspace({ chatId, providerAvailability }: ChatWorkspacePro
   const initializedChatIdRef = useRef<string | null>(null);
   const modelOptions = useMemo(() => flattenModelOptions(), []);
   const { selection, setSelection } = useSelectedModel();
+  const { toneOfVoice, setToneOfVoice } = useSelectedTone();
   const { messages, sendMessage, status } = useChat({
     id: chatId,
     onError: (error) => {
@@ -98,12 +107,13 @@ export function ChatWorkspace({ chatId, providerAvailability }: ChatWorkspacePro
           body: {
             providerId: nextSelection.providerId,
             modelId: nextSelection.modelId,
+            toneOfVoice,
           },
         }
       );
       setInput("");
     },
-    [providerAvailability, selection, sendMessage]
+    [providerAvailability, selection, sendMessage, toneOfVoice]
   );
 
   useEffect(() => {
@@ -124,6 +134,7 @@ export function ChatWorkspace({ chatId, providerAvailability }: ChatWorkspacePro
         body: {
           providerId: pendingInitialPrompt.providerId,
           modelId: pendingInitialPrompt.modelId,
+          toneOfVoice: pendingInitialPrompt.toneOfVoice,
         },
       }
     );
@@ -146,6 +157,8 @@ export function ChatWorkspace({ chatId, providerAvailability }: ChatWorkspacePro
               onSubmit={submitWithSelection}
               modelSelection={selection}
               onModelChange={setSelection}
+              toneOfVoice={toneOfVoice}
+              onToneOfVoiceChange={setToneOfVoice}
               modelOptions={modelOptions}
               providerAvailability={providerAvailability}
               disabled={isSubmitting}
@@ -167,6 +180,8 @@ export function ChatWorkspace({ chatId, providerAvailability }: ChatWorkspacePro
             onSubmit={submitWithSelection}
             modelSelection={selection}
             onModelChange={setSelection}
+            toneOfVoice={toneOfVoice}
+            onToneOfVoiceChange={setToneOfVoice}
             modelOptions={modelOptions}
             providerAvailability={providerAvailability}
             disabled={isSubmitting}

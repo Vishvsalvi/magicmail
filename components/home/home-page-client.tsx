@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { useSelectedModel } from "@/hooks/use-selected-model";
+import { useSelectedTone } from "@/hooks/use-selected-tone";
 import { AppShell } from "@/components/common/app-shell/app-shell";
 import { PromptInput } from "@/components/common/prompt-input/prompt-input";
 import { subscribeToNewChatReset } from "@/lib/chat-store";
@@ -23,6 +24,7 @@ export function HomePageClient({ providerAvailability }: HomePageClientProps) {
   const router = useRouter();
   const [input, setInput] = useState("");
   const { selection, setSelection } = useSelectedModel();
+  const { toneOfVoice, setToneOfVoice } = useSelectedTone();
   const modelOptions = useMemo(() => flattenModelOptions(), []);
 
   useEffect(() => {
@@ -43,9 +45,11 @@ export function HomePageClient({ providerAvailability }: HomePageClientProps) {
             onValueChange={setInput}
             selectedProviderId={selection.providerId}
             selectedModelId={selection.modelId}
+            selectedToneOfVoice={toneOfVoice}
             modelOptions={modelOptions}
             providerAvailability={providerAvailability}
             onModelChange={setSelection}
+            onToneOfVoiceChange={setToneOfVoice}
             onSubmit={(value) => {
               if (!providerAvailability[selection.providerId]) {
                 toast.error(getMissingApiKeyError(selection.providerId));
@@ -58,6 +62,7 @@ export function HomePageClient({ providerAvailability }: HomePageClientProps) {
                 prompt: value,
                 providerId: selection.providerId,
                 modelId: selection.modelId,
+                toneOfVoice,
               });
               setInput("");
               router.push(`/chat/${chatId}`);

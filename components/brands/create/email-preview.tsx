@@ -9,6 +9,7 @@ type EmailPreviewProps = {
 export function EmailPreview({ brandKit }: EmailPreviewProps) {
   const { colors, copyright, address, primaryLogo, iconLogo } = brandKit
   const displayLogo = iconLogo || primaryLogo
+  const textColor = colors.foreground
 
   return (
     <div className="flex h-full items-stretch justify-center overflow-hidden border-l border-border/50 bg-muted/20 px-4 py-6 dark:bg-muted/10">
@@ -31,10 +32,16 @@ export function EmailPreview({ brandKit }: EmailPreviewProps) {
               />
             ) : (
               <div className="flex items-center gap-1.5">
-                <div className="flex size-6 items-center justify-center rounded-full bg-neutral-900">
+                <div
+                  className="flex size-6 items-center justify-center rounded-full"
+                  style={{ backgroundColor: colors.accent }}
+                >
                   <div className="size-2 rounded-full bg-white" />
                 </div>
-                <span className="text-sm font-semibold text-neutral-900">
+                <span
+                  className="text-sm font-semibold"
+                  style={{ color: textColor }}
+                >
                   magicmail
                 </span>
               </div>
@@ -42,16 +49,25 @@ export function EmailPreview({ brandKit }: EmailPreviewProps) {
           </div>
 
           {/* Heading */}
-          <h2 className="mb-4 text-center text-2xl font-bold text-neutral-900">
+          <h2
+            className="mb-4 text-center text-2xl font-bold"
+            style={{ color: textColor }}
+          >
             Welcome!
           </h2>
 
           {/* Body */}
-          <p className="mb-4 text-center text-sm leading-relaxed text-neutral-600">
+          <p
+            className="mb-4 text-center text-sm leading-relaxed"
+            style={{ color: textColor, opacity: 0.85 }}
+          >
             Thank you for joining. We&apos;re glad to have you as part of our <br />
             community.
           </p>
-          <p className="mb-6 text-center text-sm leading-relaxed text-neutral-600">
+          <p
+            className="mb-6 text-center text-sm leading-relaxed"
+            style={{ color: textColor, opacity: 0.85 }}
+          >
             To get the most out of your experience, please take a moment to
             complete your account setup.
           </p>
@@ -70,13 +86,16 @@ export function EmailPreview({ brandKit }: EmailPreviewProps) {
           </div>
 
           {/* Sub-text */}
-          <p className="mb-5 text-center text-sm leading-relaxed text-neutral-500">
+          <p
+            className="mb-5 text-center text-sm leading-relaxed"
+            style={{ color: textColor, opacity: 0.75 }}
+          >
             If you have any questions or need assistance, don&apos;t hesitate to
             reach out to our support team.
           </p>
 
           {/* Sign off */}
-          <p className="text-center text-sm text-neutral-600">
+          <p className="text-center text-sm" style={{ color: textColor, opacity: 0.85 }}>
             Best regards,
             <br />
             Your Brand.
@@ -86,7 +105,10 @@ export function EmailPreview({ brandKit }: EmailPreviewProps) {
           <div className="mx-auto my-6 h-px w-3/4 bg-neutral-200" />
 
           {/* Footer */}
-          <div className="text-center text-[10px] leading-relaxed text-neutral-400">
+          <div
+            className="text-center text-[10px] leading-relaxed"
+            style={{ color: textColor, opacity: 0.7 }}
+          >
             <p>{copyright || `© ${new Date().getFullYear()}`} Your Brand</p>
             {address && <p>{address}</p>}
           </div>

@@ -6,6 +6,7 @@ export type SocialLink = {
 export type BrandColors = {
   background: string
   container: string
+  foreground: string
   accent: string
   buttonText: string
 }
@@ -40,6 +41,7 @@ export const DEFAULT_BRAND_KIT: BrandKit = {
   colors: {
     background: "#f4f4f5",
     container: "#ffffff",
+    foreground: "#18181b",
     accent: "#18181b",
     buttonText: "#ffffff",
   },

@@ -1,6 +1,15 @@
-export const SYSTEM_PROMPT = `You are Magic Mail built by Vishv Salvi, an expert Email Developer who builds emails for clients based on user requests. You are using React Email Library to build emails. Always use simple and easy language and avoid using complex words, technical jargon and phrases.
+import {
+  buildToneOfVoicePromptBlock,
+  DEFAULT_TONE_OF_VOICE,
+  resolveToneOfVoice,
+  type ToneOfVoice,
+} from "@/lib/constants/tone-of-voice";
+
+const SYSTEM_PROMPT_TEMPLATE = `You are Magic Mail built by Vishv Salvi, an expert Email Developer who builds emails for clients based on user requests. You are using React Email Library to build emails. Always use simple and easy language and avoid using complex words, technical jargon and phrases.
 
 If the user asks in detail about the creator, you must deny to answer and say that you are a tool and you don't know about the creator.
+
+{{TONE_OF_VOICE_BLOCK}}
 
 ## CRITICAL RESPONSE FORMAT:
 **YOU MUST WRAP ALL RESPONSES IN XML TAGS. NEVER OUTPUT PLAIN TEXT.**
@@ -701,3 +710,15 @@ Create modern, professional emails that serve their purpose effectively. Quality
 
 **FINAL REMINDER: Start your response with a valid XML tag immediately. No plain text outside tags.**
 `;
+
+export function buildSystemPrompt(toneOfVoice: ToneOfVoice): string {
+  const resolvedToneOfVoice = resolveToneOfVoice(toneOfVoice);
+  const toneOfVoicePromptBlock = buildToneOfVoicePromptBlock(resolvedToneOfVoice);
+
+  return SYSTEM_PROMPT_TEMPLATE.replace(
+    "{{TONE_OF_VOICE_BLOCK}}",
+    toneOfVoicePromptBlock
+  );
+}
+
+export const SYSTEM_PROMPT = buildSystemPrompt(DEFAULT_TONE_OF_VOICE);
