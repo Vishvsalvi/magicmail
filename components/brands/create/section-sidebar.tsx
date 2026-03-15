@@ -1,6 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
+import { type SectionId } from "@/lib/constants/brand-sections"
 import {
   LayoutGrid,
   Scale,
@@ -9,12 +10,7 @@ import {
   Palette,
 } from "lucide-react"
 
-export type SectionId =
-  | "brand-details"
-  | "legal"
-  | "socials"
-  | "logos"
-  | "colors"
+export type { SectionId }
 
 type SectionItem = {
   id: SectionId

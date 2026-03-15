@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useCallback } from "react"
 import type { BrandKit, BrandColors, SocialLink } from "@/lib/brands/brand-types"
-import type { SectionId } from "./section-sidebar"
+import { type SectionId, BRAND_SECTION_IDS } from "@/lib/constants/brand-sections"
 import { BrandDetailsSection } from "./sections/brand-details-section"
 import { LegalSection } from "./sections/legal-section"
 import { SocialsSection } from "./sections/socials-section"
@@ -21,14 +21,6 @@ type BrandFormProps = {
   onActiveSectionChange: (id: SectionId) => void
   scrollTargetRef: React.RefObject<HTMLDivElement | null>
 }
-
-const SECTION_IDS: SectionId[] = [
-  "brand-details",
-  "legal",
-  "socials",
-  "logos",
-  "colors",
-]
 
 export function BrandForm({
   brandKit,
@@ -69,7 +61,7 @@ export function BrandForm({
       }
     )
 
-    for (const id of SECTION_IDS) {
+    for (const id of BRAND_SECTION_IDS) {
       const el = container.querySelector(`#${id}`)
       if (el) observer.observe(el)
     }

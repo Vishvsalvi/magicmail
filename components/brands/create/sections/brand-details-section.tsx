@@ -1,9 +1,9 @@
 "use client"
 
 import type { BrandKit } from "@/lib/brands/brand-types"
-import { Input } from "@/components/ui/input"
+import { TONE_OF_VOICE_OPTIONS } from "@/lib/constants/tone-of-voice"
+import { FormField } from "@/components/ui/form-field"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import {
   Select,
   SelectContent,
@@ -11,14 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-
-const TONE_OPTIONS = [
-  { value: "neutral", label: "Neutral" },
-  { value: "formal", label: "Formal" },
-  { value: "casual", label: "Casual" },
-  { value: "friendly", label: "Friendly" },
-  { value: "professional", label: "Professional" },
-]
 
 type BrandDetailsSectionProps = {
   brandKit: BrandKit
@@ -34,54 +26,39 @@ export function BrandDetailsSection({
       <h2 className="text-lg font-semibold text-foreground">Brand Details</h2>
 
       <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="kitName" className="text-xs text-muted-foreground">
-            Kit Name
-          </Label>
-          <Input
-            id="kitName"
-            value={brandKit.kitName}
-            onChange={(e) => onFieldChange("kitName", e.target.value)}
-            placeholder="New Brand Kit #1"
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="website" className="text-xs text-muted-foreground">
-            Website
-          </Label>
-          <Input
-            id="website"
-            value={brandKit.website}
-            onChange={(e) => onFieldChange("website", e.target.value)}
-            placeholder="yoursite.com"
-          />
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="brandSummary" className="text-xs text-muted-foreground">
-          Brand Summary
-        </Label>
-        <Textarea
-          id="brandSummary"
-          value={brandKit.brandSummary}
-          onChange={(e) => onFieldChange("brandSummary", e.target.value)}
-          placeholder="Write a short description of your brand"
-          className="min-h-[80px] resize-none"
+        <FormField
+          id="kitName"
+          label="Kit Name"
+          value={brandKit.kitName}
+          onChange={(v) => onFieldChange("kitName", v)}
+          placeholder="New Brand Kit #1"
+        />
+        <FormField
+          id="website"
+          label="Website"
+          value={brandKit.website}
+          onChange={(v) => onFieldChange("website", v)}
+          placeholder="yoursite.com"
         />
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="address" className="text-xs text-muted-foreground">
-          Address
-        </Label>
-        <Input
-          id="address"
-          value={brandKit.address}
-          onChange={(e) => onFieldChange("address", e.target.value)}
-          placeholder="123 Main Street, City, Country"
-        />
-      </div>
+      <FormField
+        id="brandSummary"
+        label="Brand Summary"
+        value={brandKit.brandSummary}
+        onChange={(v) => onFieldChange("brandSummary", v)}
+        placeholder="Write a short description of your brand"
+        multiline
+        className="min-h-[80px] resize-none"
+      />
+
+      <FormField
+        id="address"
+        label="Address"
+        value={brandKit.address}
+        onChange={(v) => onFieldChange("address", v)}
+        placeholder="123 Main Street, City, Country"
+      />
 
       <div className="space-y-2">
         <Label htmlFor="toneOfVoice" className="text-xs text-muted-foreground">
@@ -95,7 +72,7 @@ export function BrandDetailsSection({
             <SelectValue placeholder="Select tone" />
           </SelectTrigger>
           <SelectContent>
-            {TONE_OPTIONS.map((option) => (
+            {TONE_OF_VOICE_OPTIONS.map((option) => (
               <SelectItem key={option.value} value={option.value}>
                 {option.label}
               </SelectItem>

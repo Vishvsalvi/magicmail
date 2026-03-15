@@ -1,27 +1,16 @@
 "use client";
 
-import { useState } from "react";
-
 import {
   DEFAULT_MODEL_SELECTION,
   resolveModelSelection,
   type ModelSelection,
 } from "@/lib/constants/models";
+import { STORAGE_KEYS } from "@/lib/constants/storage-keys";
+import { usePersistedState } from "@/hooks/use-persisted-state";
 
-const SELECTED_MODEL_STORAGE_KEY = "magicmail:selected-model";
-
-function getStoredSelection(): ModelSelection | null {
-  if (typeof window === "undefined") return null;
-
+function parseStoredModel(raw: string): ModelSelection | null {
   try {
-    const storedValue = window.localStorage.getItem(SELECTED_MODEL_STORAGE_KEY);
-    if (!storedValue) return null;
-
-    const parsed = JSON.parse(storedValue) as {
-      providerId?: unknown;
-      modelId?: unknown;
-    };
-
+    const parsed = JSON.parse(raw) as { providerId?: unknown; modelId?: unknown };
     return resolveModelSelection(parsed.providerId, parsed.modelId);
   } catch {
     return null;
@@ -29,13 +18,16 @@ function getStoredSelection(): ModelSelection | null {
 }
 
 export function useSelectedModel(initialSelection?: Partial<ModelSelection>) {
-  const [selection, setSelectionState] = useState<ModelSelection>(() => {
-    if (initialSelection) {
-      return resolveModelSelection(initialSelection.providerId, initialSelection.modelId);
-    }
+  const override = initialSelection
+    ? resolveModelSelection(initialSelection.providerId, initialSelection.modelId)
+    : undefined;
 
-    return getStoredSelection() ?? DEFAULT_MODEL_SELECTION;
-  });
+  const [selection, setSelectionState] = usePersistedState(
+    STORAGE_KEYS.SELECTED_MODEL,
+    parseStoredModel,
+    DEFAULT_MODEL_SELECTION,
+    { override }
+  );
 
   const setSelection = (nextSelection: ModelSelection) => {
     const safeSelection = resolveModelSelection(
@@ -43,15 +35,6 @@ export function useSelectedModel(initialSelection?: Partial<ModelSelection>) {
       nextSelection.modelId
     );
     setSelectionState(safeSelection);
-
-    try {
-      window.localStorage.setItem(
-        SELECTED_MODEL_STORAGE_KEY,
-        JSON.stringify(safeSelection)
-      );
-    } catch {
-      // Ignore localStorage write failures.
-    }
   };
 
   return {

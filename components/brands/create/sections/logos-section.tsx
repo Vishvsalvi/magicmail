@@ -3,20 +3,13 @@
 import { useRef, useCallback } from "react"
 import { Plus, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { SectionHeader } from "@/components/ui/section-header"
+import { fileToDataUrl } from "@/lib/file-utils"
 
 type LogosSectionProps = {
   primaryLogo: string | null
   iconLogo: string | null
   onLogoChange: (type: "primaryLogo" | "iconLogo", dataUrl: string | null) => void
-}
-
-function fileToDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => resolve(reader.result as string)
-    reader.onerror = reject
-    reader.readAsDataURL(file)
-  })
 }
 
 function LogoUploadBox({
@@ -98,12 +91,10 @@ export function LogosSection({
 }: LogosSectionProps) {
   return (
     <section id="logos" className="space-y-4">
-      <div>
-        <h2 className="text-lg font-semibold text-foreground">Logos</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Add the logos that represent your brand.
-        </p>
-      </div>
+      <SectionHeader
+        title="Logos"
+        description="Add the logos that represent your brand."
+      />
 
       <div className="grid grid-cols-2 gap-4">
         <LogoUploadBox

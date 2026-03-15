@@ -19,6 +19,8 @@ export const MODEL_REGISTRY = {
     label: "OpenAI",
     apiKeyEnvVar: "OPENAI_API_KEY",
     models: [
+      { id: "gpt-5.4", label: "GPT-5.4" },
+      { id: "gpt-5.4-pro", label: "GPT-5.4 Pro" },
       { id: "gpt-5-mini", label: "GPT-5 Mini" },
       { id: "gpt-5-nano", label: "GPT-5 Nano" },
       { id: "gpt-5.2", label: "GPT-5.2" },

@@ -1,19 +1,18 @@
 import { NextResponse } from "next/server";
 
 import { EmailPreviewError, compileEmail } from "@/lib/email-preview/compile-email";
+import { parseJsonBody, isErrorResponse } from "@/lib/api-utils";
 
 type PreviewRequestBody = {
   code?: unknown;
 };
 
 export async function POST(req: Request) {
-  let body: PreviewRequestBody;
-
-  try {
-    body = (await req.json()) as PreviewRequestBody;
-  } catch {
+  const bodyOrError = await parseJsonBody<PreviewRequestBody>(req);
+  if (isErrorResponse(bodyOrError)) {
     return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
   }
+  const body = bodyOrError;
 
   if (typeof body.code !== "string") {
     return NextResponse.json({ error: "Request body must include a string `code`." }, { status: 400 });

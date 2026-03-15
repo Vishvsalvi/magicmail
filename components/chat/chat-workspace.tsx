@@ -167,7 +167,7 @@ export function ChatWorkspace({ chatId, providerAvailability }: ChatWorkspacePro
           </ResizablePanel>
           <ResizableHandle className="w-0 bg-transparent after:w-3" />
           <ResizablePanel defaultSize={60} minSize={30}>
-            <ChatPreviewPanel frame="split" code={editorCode} canCompile={canCompilePreview} />
+            <ChatPreviewPanel frame="split" code={editorCode} canCompile={canCompilePreview} isGenerating={isSubmitting} />
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
@@ -193,6 +193,7 @@ export function ChatWorkspace({ chatId, providerAvailability }: ChatWorkspacePro
             frame="standalone"
             code={editorCode}
             canCompile={canCompilePreview}
+            isGenerating={isSubmitting}
           />
         </div>
       </div>

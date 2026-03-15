@@ -9,6 +9,8 @@ export function useBrandForm() {
   const [brandKit, setBrandKit] = useState<BrandKit>(DEFAULT_BRAND_KIT)
   const [isSaved, setIsSaved] = useState(false)
 
+  const markDirty = useCallback(() => setIsSaved(false), [])
+
   // Load from localStorage on mount
   useEffect(() => {
     const stored = loadBrandKit()
@@ -20,9 +22,9 @@ export function useBrandForm() {
   const updateField = useCallback(
     <K extends keyof BrandKit>(field: K, value: BrandKit[K]) => {
       setBrandKit((prev) => ({ ...prev, [field]: value }))
-      setIsSaved(false)
+      markDirty()
     },
-    []
+    [markDirty]
   )
 
   const updateColor = useCallback(
@@ -31,9 +33,9 @@ export function useBrandForm() {
         ...prev,
         colors: { ...prev.colors, [colorKey]: value },
       }))
-      setIsSaved(false)
+      markDirty()
     },
-    []
+    [markDirty]
   )
 
   const addSocial = useCallback(() => {
@@ -41,16 +43,16 @@ export function useBrandForm() {
       ...prev,
       socials: [...prev.socials, { platform: "", url: "" }],
     }))
-    setIsSaved(false)
-  }, [])
+    markDirty()
+  }, [markDirty])
 
   const removeSocial = useCallback((index: number) => {
     setBrandKit((prev) => ({
       ...prev,
       socials: prev.socials.filter((_, i) => i !== index),
     }))
-    setIsSaved(false)
-  }, [])
+    markDirty()
+  }, [markDirty])
 
   const updateSocial = useCallback(
     (index: number, field: keyof SocialLink, value: string) => {
@@ -60,17 +62,17 @@ export function useBrandForm() {
           i === index ? { ...social, [field]: value } : social
         ),
       }))
-      setIsSaved(false)
+      markDirty()
     },
-    []
+    [markDirty]
   )
 
   const setLogo = useCallback(
     (type: "primaryLogo" | "iconLogo", dataUrl: string | null) => {
       setBrandKit((prev) => ({ ...prev, [type]: dataUrl }))
-      setIsSaved(false)
+      markDirty()
     },
-    []
+    [markDirty]
   )
 
   const saveBrand = useCallback(() => {

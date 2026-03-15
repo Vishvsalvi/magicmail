@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 import type { BrandColors } from "@/lib/brands/brand-types"
+import { normalizeHex } from "@/lib/color-utils"
+import { SectionHeader } from "@/components/ui/section-header"
 import {
   Popover,
   PopoverContent,
@@ -49,14 +51,6 @@ const COLOR_FIELDS: {
     description: "Text on buttons",
   },
 ]
-
-const HEX_COLOR_PATTERN = /^#?[0-9a-fA-F]{6}$/
-
-function normalizeHex(value: string): string | null {
-  const trimmed = value.trim()
-  if (!HEX_COLOR_PATTERN.test(trimmed)) return null
-  return `#${trimmed.replace("#", "").toLowerCase()}`
-}
 
 function ColorPickerBox({
   label,
@@ -174,12 +168,10 @@ export function ColorsSection({
 }: ColorsSectionProps) {
   return (
     <section id="colors" className="space-y-4">
-      <div>
-        <h2 className="text-lg font-semibold text-foreground">Colors</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Set the look and feel of your email with your brand colors.
-        </p>
-      </div>
+      <SectionHeader
+        title="Colors"
+        description="Set the look and feel of your email with your brand colors."
+      />
 
       <div className="grid grid-cols-2 gap-4">
         {COLOR_FIELDS.map((field) => (
