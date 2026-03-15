@@ -1,8 +1,7 @@
 "use client"
 
 import type { BrandKit } from "@/lib/brands/brand-types"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { FormField } from "@/components/ui/form-field"
 
 type LegalSectionProps = {
   brandKit: BrandKit
@@ -14,41 +13,29 @@ export function LegalSection({ brandKit, onFieldChange }: LegalSectionProps) {
     <section id="legal" className="space-y-5">
       <h2 className="text-lg font-semibold text-foreground">Legal</h2>
 
-      <div className="space-y-2">
-        <Label htmlFor="copyright" className="text-xs text-muted-foreground">
-          Copyright
-        </Label>
-        <Input
-          id="copyright"
-          value={brandKit.copyright}
-          onChange={(e) => onFieldChange("copyright", e.target.value)}
-          placeholder={`© ${new Date().getFullYear()}`}
-        />
-      </div>
+      <FormField
+        id="copyright"
+        label="Copyright"
+        value={brandKit.copyright}
+        onChange={(v) => onFieldChange("copyright", v)}
+        placeholder={`© ${new Date().getFullYear()}`}
+      />
 
-      <div className="space-y-2">
-        <Label htmlFor="footer" className="text-xs text-muted-foreground">
-          Footer
-        </Label>
-        <Input
-          id="footer"
-          value={brandKit.footer}
-          onChange={(e) => onFieldChange("footer", e.target.value)}
-          placeholder="Add standard footer text that appears in every email"
-        />
-      </div>
+      <FormField
+        id="footer"
+        label="Footer"
+        value={brandKit.footer}
+        onChange={(v) => onFieldChange("footer", v)}
+        placeholder="Add standard footer text that appears in every email"
+      />
 
-      <div className="space-y-2">
-        <Label htmlFor="disclaimers" className="text-xs text-muted-foreground">
-          Disclaimers
-        </Label>
-        <Input
-          id="disclaimers"
-          value={brandKit.disclaimers}
-          onChange={(e) => onFieldChange("disclaimers", e.target.value)}
-          placeholder="Add any disclaimers or legal information needed"
-        />
-      </div>
+      <FormField
+        id="disclaimers"
+        label="Disclaimers"
+        value={brandKit.disclaimers}
+        onChange={(v) => onFieldChange("disclaimers", v)}
+        placeholder="Add any disclaimers or legal information needed"
+      />
     </section>
   )
 }

@@ -175,12 +175,12 @@ export function PromptInput({
             }}
             disabled={disabled}
           >
-            <SelectTrigger className="h-8 w-[160px] gap-1 border border-border/60 bg-background/50 px-2 text-xs focus-visible:ring-1">
+            <SelectTrigger className="h-8 w-fit gap-1 border-0 bg-transparent px-2 text-sm shadow-none hover:bg-muted focus-visible:ring-0">
               <SelectValue placeholder="Select tone">
                 {selectedToneOption ? selectedToneOption.label : "Select tone"}
               </SelectValue>
             </SelectTrigger>
-            <SelectContent className="w-[180px]" align="start">
+            <SelectContent align="start">
               {TONE_OF_VOICE_OPTIONS.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
@@ -200,12 +200,12 @@ export function PromptInput({
             }}
             disabled={disabled || modelOptions.length === 0}
           >
-            <SelectTrigger className="h-8 w-[200px] gap-1 border border-border/60 bg-background/50 px-2 text-xs focus-visible:ring-1">
+            <SelectTrigger className="h-8 w-fit gap-1 border-0 bg-transparent px-2 text-sm shadow-none hover:bg-muted focus-visible:ring-0">
               <SelectValue placeholder="Select model">
                 {selectedOption ? selectedOption.modelLabel : "Select model"}
               </SelectValue>
             </SelectTrigger>
-            <SelectContent className="w-[220px]" align="start">
+            <SelectContent align="start">
               {groupedModelOptions.map((group) => (
                 <SelectGroup key={group.providerId}>
                   <SelectLabel>{group.providerLabel}</SelectLabel>

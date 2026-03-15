@@ -1,7 +1,5 @@
+import { PanelLoader } from "@/components/chat/PanelLoader";
+
 export function EditorLoader() {
-  return (
-    <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-      Loading editor...
-    </div>
-  );
+  return <PanelLoader message="Loading editor..." />;
 }

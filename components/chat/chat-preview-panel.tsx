@@ -2,12 +2,14 @@
 
 import { useCallback, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { AppWindow, Code } from "lucide-react";
+import { AppWindow, Code, Loader2 } from "lucide-react";
 
 import { EditorLoader } from "@/components/chat/editorLoader";
 import { PreviewLoader } from "@/components/chat/previewLoader";
+import { GeneratingLoader } from "@/components/chat/PanelLoader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+import { getMonacoTheme, type MonacoTheme } from "@/lib/theme-utils";
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
   ssr: false,
@@ -17,11 +19,10 @@ const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
 type ChatPreviewPanelProps = {
   code: string;
   canCompile?: boolean;
+  isGenerating?: boolean;
   frame?: "split" | "standalone";
   className?: string;
 };
-
-type MonacoTheme = "light" | "vs-dark";
 
 const PREVIEW_CENTERING_STYLE = `
 html, body {
@@ -40,12 +41,6 @@ body {
   overflow-x: auto !important;
 }
 `;
-
-function getMonacoTheme(): MonacoTheme {
-  if (typeof document === "undefined") return "light";
-
-  return document.documentElement.classList.contains("dark") ? "vs-dark" : "light";
-}
 
 function injectPreviewCenteringStyles(html: string): string {
   const trimmed = html.trim();
@@ -67,6 +62,7 @@ function injectPreviewCenteringStyles(html: string): string {
 export function ChatPreviewPanel({
   code,
   canCompile = true,
+  isGenerating = false,
   frame = "standalone",
   className,
 }: ChatPreviewPanelProps) {
@@ -173,12 +169,16 @@ export function ChatPreviewPanel({
       aria-label="Preview panel"
     >
       <Tabs
-        defaultValue="preview"
+        defaultValue="code"
         className="flex h-full min-h-0 flex-col gap-3 bg-transparent p-3"
       >
         <TabsList className="h-11 rounded-xl border border-border/80 bg-muted/70 p-1">
-          <TabsTrigger value="preview" className=" rounded-lg">
-            <AppWindow className="size-4" />
+          <TabsTrigger value="preview" className="rounded-lg" disabled={isGenerating}>
+            {isGenerating ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <AppWindow className="size-4" />
+            )}
             Preview
           </TabsTrigger>
           <TabsTrigger value="code" className=" rounded-lg">
@@ -191,7 +191,9 @@ export function ChatPreviewPanel({
           value="preview"
           className="min-h-0 overflow-hidden rounded-xl border border-border bg-card"
         >
-          {isPreviewLoading ? (
+          {isGenerating ? (
+            <GeneratingLoader />
+          ) : isPreviewLoading ? (
             <PreviewLoader />
           ) : previewError ? (
             <div className="themed-scrollbar h-full w-full overflow-y-auto p-4">

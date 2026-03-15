@@ -1,45 +1,30 @@
 "use client";
 
-import { useState } from "react";
-
 import {
   DEFAULT_TONE_OF_VOICE,
   resolveToneOfVoice,
   type ToneOfVoice,
 } from "@/lib/constants/tone-of-voice";
+import { STORAGE_KEYS } from "@/lib/constants/storage-keys";
+import { usePersistedState } from "@/hooks/use-persisted-state";
 
-const SELECTED_TONE_STORAGE_KEY = "magicmail:selected-tone-of-voice";
-
-function getStoredTone(): ToneOfVoice | null {
-  if (typeof window === "undefined") return null;
-
-  try {
-    const storedValue = window.localStorage.getItem(SELECTED_TONE_STORAGE_KEY);
-    if (!storedValue) return null;
-    return resolveToneOfVoice(storedValue);
-  } catch {
-    return null;
-  }
+function parseStoredTone(raw: string): ToneOfVoice {
+  return resolveToneOfVoice(raw);
 }
 
 export function useSelectedTone(initialTone?: unknown) {
-  const [toneOfVoice, setToneOfVoiceState] = useState<ToneOfVoice>(() => {
-    if (typeof initialTone !== "undefined") {
-      return resolveToneOfVoice(initialTone);
-    }
+  const override =
+    typeof initialTone !== "undefined" ? resolveToneOfVoice(initialTone) : undefined;
 
-    return getStoredTone() ?? DEFAULT_TONE_OF_VOICE;
-  });
+  const [toneOfVoice, setToneOfVoiceState] = usePersistedState(
+    STORAGE_KEYS.SELECTED_TONE,
+    parseStoredTone,
+    DEFAULT_TONE_OF_VOICE,
+    { override, serialize: (v) => v }
+  );
 
   const setToneOfVoice = (nextToneOfVoice: ToneOfVoice) => {
-    const safeTone = resolveToneOfVoice(nextToneOfVoice);
-    setToneOfVoiceState(safeTone);
-
-    try {
-      window.localStorage.setItem(SELECTED_TONE_STORAGE_KEY, safeTone);
-    } catch {
-      // Ignore localStorage write failures.
-    }
+    setToneOfVoiceState(resolveToneOfVoice(nextToneOfVoice));
   };
 
   return {
